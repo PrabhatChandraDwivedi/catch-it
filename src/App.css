@@ -1,0 +1,84 @@
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Landing page styling */
+.landing {
+  text-align: center;
+}
+
+.landing h1 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: #444;
+}
+
+.landing button {
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.landing button:hover {
+  background-color: #0056b3;
+}
+
+/* Game container styling */
+.game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #d8e3e7;
+  overflow: hidden;
+}
+
+.basket {
+  position: absolute;
+  bottom: 5%;
+  width: 10%;
+  height: 5%;
+  background-color: #ff6347;
+  border-radius: 5px;
+  transition: left 0.1s;
+}
+
+.falling-object {
+  position: absolute;
+  width: 2%;
+  height: 4%;
+  background-color: #008080;
+  border-radius: 50%;
+}
+
+.score-board {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.missed-board {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
