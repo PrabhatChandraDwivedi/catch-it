@@ -7,6 +7,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [missed, setMissed] = useState(0);
   const maxMissed = 5;
+  const [gameOver, setGameOver] = useState(false); // New state for game over
 
   const basketPositionRef = useRef(50);
   const movementRef = useRef(0); 
@@ -106,13 +107,30 @@ function App() {
 
   useEffect(() => {
     if (missed >= maxMissed) {
-      alert(`Game Over! Your Score: ${score}`);
+      setGameOver(true); // Show the game over modal
       setGameStarted(false);
-      setScore(0);
-      setMissed(0);
       setFallingObjects([]);
     }
-  }, [missed, score]);
+  }, [missed]);
+
+  const restartGame = () => {
+    setGameStarted(true);
+    setScore(0);
+    setMissed(0);
+    setFallingObjects([]);
+    setGameOver(false);
+    basketPositionRef.current = 50; 
+  };
+  
+
+  const quitGame = () => {
+    setGameStarted(false);
+    setScore(0);
+    setMissed(0);
+    setFallingObjects([]);
+    setGameOver(false);
+    basketPositionRef.current = 50;
+  };
 
   return (
     <div className="app">
@@ -146,6 +164,18 @@ function App() {
           ))}
           <div className="score-board">Score: {score}</div>
           <div className="missed-board">Missed: {missed}</div>
+        </div>
+      )}
+
+      {/* Game Over Popup */}
+      {gameOver && (
+        <div className="game-over-modal">
+          <div className="modal-content">
+            <h2>Game Over</h2>
+            <p>Your Score: {score}</p>
+            <button onClick={restartGame}>Restart</button>
+            <button onClick={quitGame}>Quit</button>
+          </div>
         </div>
       )}
     </div>
