@@ -1,11 +1,13 @@
 import React from "react";
+import "./Story.css"
 
 
 export default function Story({ currentStory, onNext, onSkip, isLastStory }) {
+  console.log(Object.values(currentStory.image)[0])
   return (
     <div className="story-container">
       <img
-        src={currentStory.image}
+        src={Object.values(currentStory.image)[0]}
         alt="Story Visual"
         className="story-image"
       />

@@ -3,6 +3,10 @@ import "./App.css";
 import sheep from "./Assets/sheep.png";
 import boyWithBasket from "./Assets/boy_with_basket.png";
 import Story from "./Components/Story/Story";
+import happySheep from "./Assets/cute_sheep.png"
+import beautiful_village from "./Assets/beautiful_village.png"
+import mad_scientist from "./Assets/mad_scientist.png"
+import sheep_in_cell from "./Assets/sheep_in_cell.png"
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -26,10 +30,10 @@ function App() {
     fallLoop: null,
   });
   const storyData = [
-    { image: "/images/story1.png", text: "This is how it all began..." },
-    { image: "/images/story2.png", text: "You are on an adventure." },
-    { image: "/images/story3.png", text: "Danger is lurking nearby..." },
-    { image: "/images/story4.png", text: "Get ready to catch it!" },
+    { image: {beautiful_village}, text: "This is how it all began..." },
+    { image: {happySheep}, text: "You are on an adventure." },
+    { image: {mad_scientist}, text: "Danger is lurking nearby..." },
+    { image: {sheep_in_cell}, text: "Get ready to catch it!" },
   ];
   useEffect(() => {
     const handleKeyDown = (e) => {
