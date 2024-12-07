@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
+import sheep from "./Assets/sheep.png"
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -7,7 +8,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [missed, setMissed] = useState(0);
   const maxMissed = 5;
-  const [gameOver, setGameOver] = useState(false); // New state for game over
+  const [gameOver, setGameOver] = useState(false); 
 
   const basketPositionRef = useRef(50);
   const movementRef = useRef(0); 
@@ -23,8 +24,8 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft" || e.key === "a") movementRef.current = -1;
-      if (e.key === "ArrowRight" || e.key === "d") movementRef.current = 1;
+      if (e.key === "ArrowLeft" || e.key === "a") movementRef.current = -2;
+      if (e.key === "ArrowRight" || e.key === "d") movementRef.current = 2;
     };
 
     const handleKeyUp = () => {
@@ -60,7 +61,7 @@ function App() {
     const spawnFallingObjects = () => {
       setFallingObjects((prev) => [
         ...prev,
-        { id: Date.now(), position: Math.random() * 100, top: 0 },
+        { id: Date.now(), position: Math.random() * 100, top: 0, rotation: Math.random() * 360 },
       ]);
       spawnTimeout = setTimeout(spawnFallingObjects, spawnInterval);
     };
@@ -107,7 +108,7 @@ function App() {
 
   useEffect(() => {
     if (missed >= maxMissed) {
-      setGameOver(true); // Show the game over modal
+      setGameOver(true); 
       setGameStarted(false);
       setFallingObjects([]);
     }
@@ -159,15 +160,19 @@ function App() {
               style={{
                 left: `${obj.position}%`,
                 top: `${obj.top}%`,
+                transform: `rotate(${obj.rotation}deg)`,
               }}
-            ></div>
+            >
+              
+              <img src={sheep} alt="Sheep" className="sheep" />
+            </div>
           ))}
           <div className="score-board">Score: {score}</div>
           <div className="missed-board">Missed: {missed}</div>
         </div>
       )}
 
-      {/* Game Over Popup */}
+
       {gameOver && (
         <div className="game-over-modal">
           <div className="modal-content">
