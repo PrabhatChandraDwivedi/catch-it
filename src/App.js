@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import sheep from "./Assets/sheep.png";
 import boyWithBasket from "./Assets/boy_with_basket.png";
+import Story from "./Components/Story/Story";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -10,7 +11,8 @@ function App() {
   const [missed, setMissed] = useState(0);
   const maxMissed = 10;
   const [gameOver, setGameOver] = useState(false);
-
+  const [storyStarted, setStoryStarted] = useState(false);
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
 
   const basketPositionRef = useRef(50);
   const movementRef = useRef(0);
@@ -23,7 +25,12 @@ function App() {
     moveBasket: null,
     fallLoop: null,
   });
-
+  const storyData = [
+    { image: "/images/story1.png", text: "This is how it all began..." },
+    { image: "/images/story2.png", text: "You are on an adventure." },
+    { image: "/images/story3.png", text: "Danger is lurking nearby..." },
+    { image: "/images/story4.png", text: "Get ready to catch it!" },
+  ];
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "ArrowLeft" || e.key === "a") movementRef.current = -2.5;
@@ -112,7 +119,18 @@ function App() {
     };
   }, [gameStarted]);
   
-  
+  const startGame = () => {
+    setStoryStarted(false);
+    setGameStarted(true);
+  };
+
+  const nextStory = () => {
+    if (currentStoryIndex < storyData.length - 1) {
+      setCurrentStoryIndex(currentStoryIndex + 1);
+    } else {
+      startGame();
+    }
+  };
   
 
   useEffect(() => {
@@ -143,10 +161,10 @@ function App() {
 
   return (
     <div className="app">
-      {!gameStarted ? (
+      {!storyStarted && !gameStarted && (
         <div className="landing">
           <h1>Catch It</h1>
-          <button onClick={() => setGameStarted(true)}>Play</button>
+          <button onClick={() => setStoryStarted(true)}>Play</button>
           {glowingSpots.map((spot, index) => (
             <div
               key={index}
@@ -155,7 +173,17 @@ function App() {
             ></div>
           ))}
         </div>
-      ) : (
+      ) }
+      {storyStarted && !gameStarted && (
+        <Story
+          currentStory={storyData[currentStoryIndex]}
+          onNext={nextStory}
+          onSkip={startGame}
+          isLastStory={currentStoryIndex === storyData.length - 1}
+        />
+      )}
+
+       {gameStarted && (
         <div className="game-container">
           <img
             src={boyWithBasket}
