@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import sheep from "./Assets/sheep.png"
+import sheep from "./Assets/sheep.png";
+import boyWithBasket from "./Assets/boy_with_basket.png";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [fallingObjects, setFallingObjects] = useState([]);
   const [score, setScore] = useState(0);
   const [missed, setMissed] = useState(0);
-  const maxMissed = 5;
-  const [gameOver, setGameOver] = useState(false); 
+  const maxMissed = 10;
+  const [gameOver, setGameOver] = useState(false);
+
 
   const basketPositionRef = useRef(50);
-  const movementRef = useRef(0); 
+  const movementRef = useRef(0);
   const glowingSpots = Array.from({ length: 50 }, () => ({
     left: Math.random() * 100,
     top: Math.random() * 100,
@@ -24,8 +26,8 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft" || e.key === "a") movementRef.current = -2;
-      if (e.key === "ArrowRight" || e.key === "d") movementRef.current = 2;
+      if (e.key === "ArrowLeft" || e.key === "a") movementRef.current = -2.5;
+      if (e.key === "ArrowRight" || e.key === "d") movementRef.current = 2.5;
     };
 
     const handleKeyUp = () => {
@@ -75,40 +77,47 @@ function App() {
 
   useEffect(() => {
     if (!gameStarted) return;
-
+  
     const fallObjects = () => {
       setFallingObjects((prev) =>
         prev
-          .map((obj) => ({ ...obj, top: obj.top + 1 }))
+          .map((obj) => ({ ...obj, top: obj.top + 1 })) 
           .filter((obj) => {
-            if (
-              obj.top >= 90 &&
+            const isWithinHorizontalBounds =
               obj.position >= basketPositionRef.current - 10 &&
-              obj.position <= basketPositionRef.current + 10
-            ) {
-              setScore((prev) => prev + 1);
+              obj.position <= basketPositionRef.current + 10;
+  
+            const isAtBasketHeight = obj.top >= 70; 
+            if (isWithinHorizontalBounds && isAtBasketHeight) {
+              setScore((prev) => prev + 1); 
               return false;
             }
+  
             if (obj.top > 100) {
-              setMissed((prev) => prev + 1);
+              setMissed((prev) => prev + 1); 
               return false;
             }
-            return true;
+  
+            return true; 
           })
       );
+  
       animationFrameRefs.current.fallLoop = requestAnimationFrame(fallObjects);
     };
-
+  
     animationFrameRefs.current.fallLoop = requestAnimationFrame(fallObjects);
-
+  
     return () => {
       cancelAnimationFrame(animationFrameRefs.current.fallLoop);
     };
   }, [gameStarted]);
+  
+  
+  
 
   useEffect(() => {
     if (missed >= maxMissed) {
-      setGameOver(true); 
+      setGameOver(true);
       setGameStarted(false);
       setFallingObjects([]);
     }
@@ -122,7 +131,6 @@ function App() {
     setGameOver(false);
     basketPositionRef.current = 50; 
   };
-  
 
   const quitGame = () => {
     setGameStarted(false);
@@ -149,10 +157,12 @@ function App() {
         </div>
       ) : (
         <div className="game-container">
-          <div
+          <img
+            src={boyWithBasket}
+            alt="Boy with Basket"
             className="basket"
             style={{ left: `${basketPositionRef.current}%` }}
-          ></div>
+          />
           {fallingObjects.map((obj) => (
             <div
               key={obj.id}
@@ -163,7 +173,6 @@ function App() {
                 transform: `rotate(${obj.rotation}deg)`,
               }}
             >
-              
               <img src={sheep} alt="Sheep" className="sheep" />
             </div>
           ))}
@@ -171,7 +180,6 @@ function App() {
           <div className="missed-board">Missed: {missed}</div>
         </div>
       )}
-
 
       {gameOver && (
         <div className="game-over-modal">

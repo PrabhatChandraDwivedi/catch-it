@@ -61,14 +61,7 @@ body {
   overflow: hidden;
 }
 
-.basket {
-  position: absolute;
-  bottom: 5%;
-  width: 10%;
-  height: 5%;
-  background-color: #ff6347;
-  border-radius: 5px;
-}
+
 
 
 .glowing-spot {
@@ -203,6 +196,14 @@ button:hover {
   }
 }
 
+
+.basket {
+  position: absolute;
+  bottom: 5%;
+  width: 15%; 
+  height: auto;
+  transform: translateX(-50%);
+}
 
 .sheep {
   width: 100%;
