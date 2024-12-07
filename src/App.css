@@ -200,8 +200,8 @@ button:hover {
 .basket {
   position: absolute;
   bottom: 5%;
-  width: 15%; 
-  height: auto;
+  width: 5%; 
+  height: 20%;
   transform: translateX(-50%);
 }
 
