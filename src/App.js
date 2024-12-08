@@ -7,6 +7,7 @@ import happySheep from "./Assets/cute_sheep.png"
 import beautiful_village from "./Assets/beautiful_village.png"
 import mad_scientist from "./Assets/mad_scientist.png"
 import sheep_in_cell from "./Assets/sheep_in_cell.png"
+import backgroundMusic from './Assets/bgm.mp3';
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -17,6 +18,18 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [storyStarted, setStoryStarted] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const [showDifficultyPopup, setShowDifficultyPopup] = useState(false);
+  const [spawnInterval, setSpawnInterval] = useState(1000);
+
+  const handleDifficultySelection = (level) => {
+    if (level === "Easy") setSpawnInterval(1000); 
+    if (level === "Medium") setSpawnInterval(800); 
+    if (level === "Hard") setSpawnInterval(600); 
+    setShowDifficultyPopup(false);
+    setStoryStarted(true); 
+  };
+
+  const audioRef = useRef(new Audio(backgroundMusic));
 
   const basketPositionRef = useRef(50);
   const movementRef = useRef(0);
@@ -30,10 +43,10 @@ function App() {
     fallLoop: null,
   });
   const storyData = [
-    { image: {beautiful_village}, text: "This is how it all began..." },
-    { image: {happySheep}, text: "You are on an adventure." },
-    { image: {mad_scientist}, text: "Danger is lurking nearby..." },
-    { image: {sheep_in_cell}, text: "Get ready to catch it!" },
+    { image: {beautiful_village}, text: "In a small, unsuspecting village ..." },
+    { image: {happySheep}, text: "There lived a magical sheep ..." },
+    { image: {mad_scientist}, text: "An evil mad scientist, driven by his wild experiments ... kidnaps the sheep for his sinister plans ..." },
+    { image: {sheep_in_cell}, text: "The sheep was kept in a cell hidden in a dungeon .... But a courageous boy, armed with only a basket, sets out on a mission to save the falling sheep and thwart the scientist's plans." },
   ];
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -68,7 +81,7 @@ function App() {
   useEffect(() => {
     if (!gameStarted) return;
 
-    const spawnInterval = 1000; 
+    
     let spawnTimeout;
 
     const spawnFallingObjects = () => {
@@ -122,6 +135,21 @@ function App() {
       cancelAnimationFrame(animationFrameRefs.current.fallLoop);
     };
   }, [gameStarted]);
+
+  useEffect(() => {
+    
+    if (storyStarted || gameStarted) {
+      audioRef.current.play();
+      audioRef.current.loop = true; 
+    } else {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0; 
+    }
+
+    return () => {
+      audioRef.current.pause();
+    };
+  }, [storyStarted, gameStarted]);
   
   const startGame = () => {
     setStoryStarted(false);
@@ -152,6 +180,9 @@ function App() {
     setFallingObjects([]);
     setGameOver(false);
     basketPositionRef.current = 50; 
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    setCurrentStoryIndex(0);
   };
 
   const quitGame = () => {
@@ -161,6 +192,9 @@ function App() {
     setFallingObjects([]);
     setGameOver(false);
     basketPositionRef.current = 50;
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    setCurrentStoryIndex(0);
   };
 
   return (
@@ -168,7 +202,7 @@ function App() {
       {!storyStarted && !gameStarted && (
         <div className="landing">
           <h1>Catch It</h1>
-          <button onClick={() => setStoryStarted(true)}>Play</button>
+          <button onClick={() => setShowDifficultyPopup(true)}>Play</button>
           {glowingSpots.map((spot, index) => (
             <div
               key={index}
@@ -178,6 +212,17 @@ function App() {
           ))}
         </div>
       ) }
+
+    {showDifficultyPopup && (
+        <div className="difficulty-popup">
+          <div className="modal-content">
+          <h2>Select Difficulty</h2>
+          <button onClick={() => handleDifficultySelection("Easy")}>Easy</button>
+          <button onClick={() => handleDifficultySelection("Medium")}>Medium</button>
+          <button onClick={() => handleDifficultySelection("Hard")}>Hard</button>
+          </div>
+        </div>
+      )}
       {storyStarted && !gameStarted && (
         <Story
           currentStory={storyData[currentStoryIndex]}
